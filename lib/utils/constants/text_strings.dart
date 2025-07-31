@@ -13,6 +13,12 @@ class TextStrings {
   static const String signup = 'Sign Up';
   static const String emailHint = 'Enter your email';
   static const String passwordHint = 'Enter your password';
+  static const String loginTitle = 'Welcome Back!';
+  static const String signupTitle = 'Create an Account';
+  static const String loginSubtitle = 'Please login to continue';
+  static const String signupSubtitle = 'Create your account to get started';
+  static const String rememberMe = 'Remember Me';
+  static const String forgotPassword = 'Forgot Password';
 
   // Errors
   static const String errorEmailEmpty = 'Email cannot be empty';

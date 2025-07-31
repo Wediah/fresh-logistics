@@ -62,7 +62,7 @@ class OnboardingScreen extends StatelessWidget {
               right: Sizes.defaultSpace,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.green[800] : Colors.white,
+                  color: isDark ? Colors.grey[800] : Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -208,7 +208,7 @@ class OnboardingScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/home');
+                        Get.find<OnBoardingController>().skipPage();
                       },
                       child: const Text(
                         'Get Started',

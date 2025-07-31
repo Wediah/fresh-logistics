@@ -11,4 +11,7 @@ class ImageStrings {
   static const String onboarding1 = 'assets/images/on_boarding_images/first.png';
   static const String onboarding2 = 'assets/images/on_boarding_images/second.png';
   static const String onboarding3 = 'assets/images/on_boarding_images/final.png';
+
+  //  Auth screen
+  static const String authBackground = 'assets/images/auth_images/auth.png';
 }
