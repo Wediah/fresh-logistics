@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:freshlogistics/features/authentication/screens/registration/register.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
-import 'package:freshlogistics/features/authentication/screens/login/login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
