@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
 import 'package:freshlogistics/features/authentication/screens/login/login.dart';
+import 'package:freshlogistics/features/authentication/screens/registration/verify_email.dart';
+import 'package:freshlogistics/utils/constants/sizes.dart';
+import 'package:freshlogistics/utils/constants/colors.dart';
+import 'package:get/get.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -16,6 +20,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final activeColor = const Color(0xFF19530E);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -221,22 +227,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizedBox(height: 24),
                   
                   // Sign up button
-                  Container(
-                    height: 46,
+                  SizedBox(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF249A0F),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Sign up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: activeColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: () {
+                        if (agreeToTerms) {
+                          Get.to(() => const VerifyEmailScreen());
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please agree to the terms of use'),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -356,7 +370,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             );
                           },
                           child: const Text(
-                            'Sign up',
+                            'Log in',
                             style: TextStyle(
                               color: Color(0xFF249A0F),
                               fontWeight: FontWeight.bold,

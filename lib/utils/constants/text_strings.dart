@@ -19,6 +19,9 @@ class TextStrings {
   static const String signupSubtitle = 'Create your account to get started';
   static const String rememberMe = 'Remember Me';
   static const String forgotPassword = 'Forgot Password';
+  static const String confirmEmail = 'Please confirm your email address to continue';
+  static const String confirmEmailSubtitle = 'A verification link has been sent to your email. Please check your inbox and click the link to verify your email address to experience a world of fresh vegetables and personalized offers.';
+  static const String resendVerification = 'Resend Verification Email';
 
   // Errors
   static const String errorEmailEmpty = 'Email cannot be empty';
@@ -27,4 +30,5 @@ class TextStrings {
   // Navigation
   static const String home = 'Home';
   static const String settings = 'Settings';
+ 
 }

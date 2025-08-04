@@ -37,28 +37,28 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Stack(
                 children: [
                   // Back button
-                  Positioned(
-                    left: 16,
-                    top: 60,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.arrow_back, color: Colors.white),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Back',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   left: 16,
+                  //   top: 60,
+                  //   child: GestureDetector(
+                  //     onTap: () => Navigator.pop(context),
+                  //     child: Row(
+                  //       children: [
+                  //         const Icon(Icons.arrow_back, color: Colors.white),
+                  //         const SizedBox(width: 4),
+                  //         Text(
+                  //           'Back',
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 14,
+                  //             fontFamily: 'Inter',
+                  //             fontWeight: FontWeight.w600,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   
                   // Title and subtitle
                   Center(
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Email field
                   Text(
-                    'Your Email Address',
+                    'Email Address',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Password field
                   Text(
-                    'Choose a Password',
+                    'Password',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
-                        hintText: 'Create a password',
+                        hintText: 'Enter your password',
                         suffixIcon: IconButton(
                           icon: Icon(
                             obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
@@ -172,49 +172,49 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 40),
                   
                   // Terms checkbox
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: agreeToTerms,
-                        onChanged: (value) {
-                          setState(() {
-                            agreeToTerms = value ?? false;
-                          });
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: 'I agree with ',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'terms of use',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                  // Row(
+                  //   children: [
+                  //     Checkbox(
+                  //       value: agreeToTerms,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           agreeToTerms = value ?? false;
+                  //         });
+                  //       },
+                  //       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  //     ),
+                  //     Expanded(
+                  //       child: Text.rich(
+                  //         TextSpan(
+                  //           children: [
+                  //             const TextSpan(
+                  //               text: 'I agree with ',
+                  //               style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 14,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.w300,
+                  //               ),
+                  //             ),
+                  //             TextSpan(
+                  //               text: 'terms of use',
+                  //               style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 14,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.w700,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 24),
                   
                   // Sign up button
                   Container(
@@ -226,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        'Sign up',
+                        'Log in',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -353,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already having an account? "),
+                  const Text("Don't have an account? "),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -364,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: const Text(
-                      'Login',  // Fixed typo from "Log up" to "Login"
+                      'Sign up',  // Fixed typo from "Log up" to "Login"
                       style: TextStyle(
                         color: Color(0xFF249A0F),
                         fontWeight: FontWeight.bold,
