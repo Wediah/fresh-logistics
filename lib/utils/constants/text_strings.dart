@@ -22,6 +22,12 @@ class TextStrings {
   static const String confirmEmail = 'Please confirm your email address to continue';
   static const String confirmEmailSubtitle = 'A verification link has been sent to your email. Please check your inbox and click the link to verify your email address to experience a world of fresh vegetables and personalized offers.';
   static const String resendVerification = 'Resend Verification Email';
+  static const String accountCreatedTile = 'Your account Created Successfully!';
+  static const String accountCreatedSubtitle = 'You can now login with your credentials.';
+  static const String forgotPasswordTitle = 'Forgot Password?';
+  static const String forgotPasswordSubTitle = 'Enter your email address and we will send you a link to reset your password.';
+  static const String resetPasswordTitle = 'Password Reset Email Sent';
+  static const String resetPasswordSubtitle = 'Your Account Password Reset Link has been sent to your email. Please check your inbox and click the link to reset your password.';
 
   // Errors
   static const String errorEmailEmpty = 'Email cannot be empty';

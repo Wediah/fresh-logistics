@@ -3,7 +3,11 @@ import 'package:freshlogistics/common/styles/spacing_styles.dart';
 import 'package:freshlogistics/utils/constants/sizes.dart';
 
 class SuccessScreen extends StatelessWidget {
-  const SuccessScreen({super.key});
+  final String title;
+  final String subTitle;
+  final VoidCallback onPressed;
+
+  const SuccessScreen({super.key, required this.title, required this.subTitle, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -35,23 +39,37 @@ class SuccessScreen extends StatelessWidget {
               SizedBox(height: Sizes.spaceBtwSections),
 
               Text(
-                'Success!',
+                title,
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: Sizes.spaceBtwItems),
               Text(
-                'Your action was successful.',
+                subTitle,
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: Sizes.spaceBtwItems),
 
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Go Back'),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF19530E), // Background color
+                    foregroundColor: Colors.white, // Text color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8), // Border radius
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16), // Button padding
+                  ),
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    )),
+                ),
               ),
             ],
           )

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:freshlogistics/features/authentication/screens/password_configs/forgot_password.dart';
 import 'package:freshlogistics/features/authentication/screens/registration/register.dart';
+import 'package:freshlogistics/features/authentication/screens/password_configs/forgot_password.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
+import 'package:get/get.dart';
+import 'package:freshlogistics/utils/constants/sizes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Create an account',
+                          'Log into your account',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -172,7 +176,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: Sizes.spaceBtwItems),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () => Get.to(() => const ForgotPasswordScreen()),
+                      child: const Text('forgot password?'),
+                    ),
+                  ),
+                  // SizedBox(height: Sizes.spaceBtwSections),
                   
                   // Terms checkbox
                   // Row(
@@ -214,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //     ),
                   //   ],
                   // ),
-                  // const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   
                   // Sign up button
                   Container(
