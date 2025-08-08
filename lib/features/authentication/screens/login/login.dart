@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
 import 'package:get/get.dart';
 import 'package:freshlogistics/utils/constants/sizes.dart';
+import 'package:freshlogistics/navigation_menu.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -227,25 +228,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   //   ],
                   // ),
                   SizedBox(height: 24),
-                  
-                  // Sign up button
-                  Container(
-                    height: 46,
+
+                  SizedBox(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF249A0F),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
+                    child: ElevatedButton(
+                      onPressed: () => Get.to(() => const NavigationMenu()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF19530E), // Background color
+                        foregroundColor: Colors.white, // Text color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Border radius
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16), // Button padding
+                      ),
+                      child: const Text(
                         'Log in',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
-                          fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                        )),
                     ),
                   ),
                 ],
