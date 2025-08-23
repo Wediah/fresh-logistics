@@ -36,5 +36,40 @@ class TextStrings {
   // Navigation
   static const String home = 'Home';
   static const String settings = 'Settings';
+
+  static const String profile = 'Profile';
+  static const String cart = 'Cart';
+  static const String orders = 'Orders';
+  static const String notifications = 'Notifications';
+  static const String aboutUs = 'About Us';
+  static const String contactUs = 'Contact Us';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String termsOfService = 'Terms of Service';
+  static const String logout = 'Logout';
+  static const String viewAll = 'View All';
+  static const String search = 'Search';
+  static const String noResultsFound = 'No results found';
+  static const String loading = 'Loading...';
+  static const String welcomeBack = 'Welcome Back!';
+  static const String welcome = 'Welcome to Fresh Logistics';
+  static const String homeAppBarTitle = 'Hello';
+  static const String homeAppBarSubtitle = 'Kofi';
+  static const String appBarTitle = 'Fresh Logistics';
+  static const String appBarSubtitle = 'Kofi';
+  static const String appBarActionCart = 'Cart';
+  static const String appBarActionProfile = 'Profile';
+  static const String appBarActionSettings = 'Settings';
+  static const String appBarActionLogout = 'Logout';
+  static const String appBarActionSearch = 'Search';
+  static const String appBarActionNotifications = 'Notifications';
+  static const String appBarActionViewAll = 'View All';
+  static const String appBarActionContactUs = 'Contact Us';
+  static const String appBarActionAboutUs = 'About Us';
+  static const String appBarActionPrivacyPolicy = 'Privacy Policy';
+  static const String appBarActionTermsOfService = 'Terms of Service';
+  static const String appBarActionResendVerification = 'Resend Verification';
+  static const String appBarActionForgotPassword = 'Forgot Password';
+  static const String appBarActionResetPassword = 'Reset Password';
+  
  
 }

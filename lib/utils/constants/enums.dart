@@ -5,3 +5,5 @@ enum UserRole { admin, user, guest }
 enum ButtonSize { small, medium, large }
 
 enum ApiStatus { loading, success, error }
+
+enum TextSizes { small, medium, large }

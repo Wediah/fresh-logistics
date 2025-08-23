@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:freshlogistics/features/shop/screens/home.dart';
+import 'package:freshlogistics/features/personalization/screens/settings/settings.dart';
+import 'package:freshlogistics/features/shop/screens/home/home.dart';
+import 'package:freshlogistics/features/shop/screens/store/store.dart';
+import 'package:freshlogistics/features/shop/screens/wishlist/wishlist.dart';
 import 'package:freshlogistics/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
 
@@ -37,9 +40,9 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
   final screens = [
-    const HomeSreen(), // Home Screen
-    Container(color: Colors.blue), // Store Screen
-    Container(color: Colors.green), // Favorites Screen
-    Container(color: Colors.yellow), // Profile Screen
+    const HomeScreen(), // Home Screen
+    const StoreScreen(), // Store Screen
+    const FavoriteScreen(), // Favorites Screen
+    const SettingsScreen(), // Profile Screen
   ];
 }

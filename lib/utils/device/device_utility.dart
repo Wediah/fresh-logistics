@@ -31,7 +31,7 @@ class DeviceUtility {
     final deviceInfo = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
-        return (await deviceInfo.androidInfo).isPhysicalDevice ?? false;
+        return (await deviceInfo.androidInfo).isPhysicalDevice;
       } else if (Platform.isIOS) {
         return (await deviceInfo.iosInfo).isPhysicalDevice;
       }
@@ -165,5 +165,13 @@ class DeviceUtility {
   static Future<void> makePhoneCall(String phoneNumber) async {
     final uri = Uri(scheme: 'tel', path: phoneNumber);
     await launchUrl(uri.toString());
+  }
+
+  static double getAppBarHeight() {
+    return kToolbarHeight;
+  }
+
+  static getScreenWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freshlogistics/features/authentication/screens/password_configs/forgot_password.dart';
 import 'package:freshlogistics/features/authentication/screens/registration/register.dart';
-import 'package:freshlogistics/features/authentication/screens/password_configs/forgot_password.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
 import 'package:get/get.dart';

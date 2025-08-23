@@ -3,8 +3,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
 import 'package:freshlogistics/features/authentication/screens/login/login.dart';
 import 'package:freshlogistics/features/authentication/screens/registration/verify_email.dart';
-import 'package:freshlogistics/utils/constants/sizes.dart';
-import 'package:freshlogistics/utils/constants/colors.dart';
 import 'package:get/get.dart';
 
 class RegistrationScreen extends StatefulWidget {
