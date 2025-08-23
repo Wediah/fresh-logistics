@@ -102,7 +102,7 @@ class CartItems extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: Sizes.spaceBtwItems),
-                            Text('${cartItem.quantity}', style: Theme.of(context).textTheme.titleSmall),
+                            Obx(() => Text(cartItem.quantity.toString(), style: Theme.of(context).textTheme.titleSmall)),
                             const SizedBox(width: Sizes.spaceBtwItems),
                             Container(
                               decoration: BoxDecoration(
@@ -111,14 +111,14 @@ class CartItems extends StatelessWidget {
                               ),
                               child: IconButton(
                                 onPressed: () => controller.addOneToCart(cartItem),
-                                icon: const Icon(Icons.add, size: 18, color: AppColors.white),
+                                icon: const Icon(Icons.add, color: Colors.white, size: 18),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    ProductPriceText(price: cartItem.totalPrice.toStringAsFixed(2)),
+                    ProductPriceText(price: (cartItem.price * cartItem.quantity).toStringAsFixed(2)),
                   ],
                 ),
             ],

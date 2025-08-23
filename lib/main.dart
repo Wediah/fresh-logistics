@@ -7,6 +7,7 @@ import 'package:freshlogistics/data/repositories/authentication_repository.dart'
 import 'package:freshlogistics/data/repositories/product_repository.dart';
 import 'package:freshlogistics/features/shop/controllers/product_controller.dart';
 import 'package:freshlogistics/features/shop/controllers/favorites_controller.dart';
+import 'package:freshlogistics/features/authentication/controllers/user_controller.dart';
 
 /// Entry point of Flutter App
 Future<void> main() async {
@@ -36,4 +37,5 @@ Future<void> _initializeServices() async {
   // Initialize controllers
   Get.put(ProductController());
   Get.put(FavoritesController());
+  Get.put(UserController());
 }

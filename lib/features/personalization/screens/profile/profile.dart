@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:freshlogistics/common/widgets/appbar/appbar.dart';
 import 'package:freshlogistics/common/widgets/texts/section_heading.dart';
+import 'package:freshlogistics/features/authentication/controllers/user_controller.dart';
 import 'package:freshlogistics/features/personalization/screens/profile/widgets/profile_menu.dart';
 import 'package:freshlogistics/utils/constants/sizes.dart';
 import 'package:freshlogistics/utils/constants/colors.dart';
+import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserController());
     return Scaffold(
       appBar: const FAppBar(title: Text('Profile'), showBackArrow: true),
       
@@ -51,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
               const SectionHeading(title: 'Profile Information', showActionButton: false),
               const SizedBox(height: Sizes.spaceBtwItems),
 
-              ProfileMenu(title: 'Name', value: 'Emmanuel Wediah', onPressed: () {}),
+              Obx(() => ProfileMenu(title: 'Name', value: controller.userName, onPressed: () {})),
               ProfileMenu(title: 'Username', value: 'emmawediah', onPressed: () {}),
 
               const SizedBox(height: Sizes.spaceBtwItems),
@@ -63,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: Sizes.spaceBtwItems),
 
               ProfileMenu(title: 'User ID', value: '45689', icon: Icons.copy, onPressed: () {}),
-              ProfileMenu(title: 'E-mail', value: 'emmawediah@example.com', onPressed: () {}),
+              Obx(() => ProfileMenu(title: 'E-mail', value: controller.user?.email ?? '', onPressed: () {})),
               ProfileMenu(title: 'Phone Number', value: '+233-244-567-890', onPressed: () {}),
               ProfileMenu(title: 'Gender', value: 'Male', onPressed: () {}),
               ProfileMenu(title: 'Date of Birth', value: '10 Oct, 1994', onPressed: () {}),
