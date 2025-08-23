@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "915173638940",
+    "project_id": "freshlogistics-26b01",
+    "storage_bucket": "freshlogistics-26b01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915173638940:android:8543539e527bea8eeb70d9",
+        "android_client_info": {
+          "package_name": "com.package.fresh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdYrZuGMALfqIa5P3u_eKeBsbbMQoU5WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

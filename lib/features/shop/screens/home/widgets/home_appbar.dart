@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:freshlogistics/features/shop/screens/cart/cart.dart';
+import 'package:get/get.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/products/cart/cart_menu_icon.dart';
@@ -27,7 +29,10 @@ class FHomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        CartCounterIcon(onPressed:  () {}, iconColor: Colors.white,)
+        CartCounterIcon(
+          onPressed: () => Get.to(() => const CartScreen()), 
+          iconColor: Colors.white,
+        )
       ],
     );
   }

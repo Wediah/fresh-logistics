@@ -34,6 +34,9 @@ class RoundedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var dark = HelperFunctions.isDarkMode(context);
+    
+    // Determine if it's a network image
+    bool isNetworkUrl = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
 
     return GestureDetector(
         onTap: onPressed,
@@ -49,8 +52,27 @@ class RoundedImage extends StatelessWidget {
             child: ClipRRect(
               borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius) : BorderRadius.zero,
               child: Image(
-                image: isNetworkImage ? NetworkImage(imageUrl) : AssetImage(imageUrl) as ImageProvider,
+                image: (isNetworkImage || isNetworkUrl) ? NetworkImage(imageUrl) : AssetImage(imageUrl) as ImageProvider,
                 fit: fit,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
               ),
             )
         )

@@ -6,6 +6,7 @@ class Product {
   final double price;
   final String brand;
   final String category;
+  final String farmId; // Added farm field
   final List<String> availableColors;
   final List<String> availableSizes;
   final int stockQuantity;
@@ -21,6 +22,7 @@ class Product {
     required this.price,
     required this.brand,
     required this.category,
+    this.farmId = '', // Optional farm field
     required this.availableColors,
     required this.availableSizes,
     required this.stockQuantity,
@@ -29,7 +31,7 @@ class Product {
     required this.isInStock,
   });
 
-  // Convert to JSON for Firebase
+  // Convert to JSON for local storage
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -39,6 +41,7 @@ class Product {
       'price': price,
       'brand': brand,
       'category': category,
+      'farmId': farmId,
       'availableColors': availableColors,
       'availableSizes': availableSizes,
       'stockQuantity': stockQuantity,
@@ -48,7 +51,7 @@ class Product {
     };
   }
 
-  // Create from JSON from Firebase
+  // Create from JSON from local storage
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] ?? '',
@@ -58,12 +61,33 @@ class Product {
       price: (json['price'] ?? 0.0).toDouble(),
       brand: json['brand'] ?? '',
       category: json['category'] ?? '',
+      farmId: json['farmId'] ?? '',
       availableColors: List<String>.from(json['availableColors'] ?? []),
       availableSizes: List<String>.from(json['availableSizes'] ?? []),
       stockQuantity: json['stockQuantity'] ?? 0,
       rating: (json['rating'] ?? 0.0).toDouble(),
       reviewCount: json['reviewCount'] ?? 0,
       isInStock: json['isInStock'] ?? false,
+    );
+  }
+
+  // Create from Firebase DocumentSnapshot
+  factory Product.fromSnapshot(Map<String, dynamic> data, String documentId) {
+    return Product(
+      id: documentId,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      price: (data['price'] ?? 0.0).toDouble(),
+      brand: data['brand'] ?? '',
+      category: data['category'] ?? '',
+      farmId: data['farmId'] ?? '',
+      availableColors: List<String>.from(data['availableColors'] ?? []),
+      availableSizes: List<String>.from(data['availableSizes'] ?? []),
+      stockQuantity: data['stockQuantity'] ?? 0,
+      rating: (data['rating'] ?? 0.0).toDouble(),
+      reviewCount: data['reviewCount'] ?? 0,
+      isInStock: data['isInStock'] ?? true,
     );
   }
 
@@ -76,6 +100,7 @@ class Product {
     double? price,
     String? brand,
     String? category,
+    String? farmId,
     List<String>? availableColors,
     List<String>? availableSizes,
     int? stockQuantity,
@@ -91,6 +116,7 @@ class Product {
       price: price ?? this.price,
       brand: brand ?? this.brand,
       category: category ?? this.category,
+      farmId: farmId ?? this.farmId,
       availableColors: availableColors ?? this.availableColors,
       availableSizes: availableSizes ?? this.availableSizes,
       stockQuantity: stockQuantity ?? this.stockQuantity,

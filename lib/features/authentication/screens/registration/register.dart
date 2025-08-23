@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:freshlogistics/utils/constants/image_strings.dart';
@@ -15,6 +16,9 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   bool agreeToTerms = false;
   bool obscurePassword = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -108,64 +112,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Email field
-                  Text(
-                    'Your Email Address',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 46,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xFFB3BCB2),
-                        width: 1,
-                      ),
-                    ),
-                    child: const TextField(
+                  // Full name input
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        border: InputBorder.none,
-                        hintText: 'Enter your email',
+                        labelText: 'Full Name',
+                        prefixIcon: const Icon(Iconsax.user),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
+
+                  // Email input
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: const Icon(Iconsax.direct_right),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   
-                  // Password field
-                  Text(
-                    'Choose a Password',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 46,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xFFB3BCB2),
-                        width: 1,
-                      ),
-                    ),
-                    child: TextField(
+                  // Password input
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: _passwordController,
                       obscureText: obscurePassword,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        border: InputBorder.none,
-                        hintText: 'Create a password',
+                        labelText: 'Password',
+                        prefixIcon: const Icon(Iconsax.lock),
                         suffixIcon: IconButton(
                           icon: Icon(
                             obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
@@ -224,31 +204,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   const SizedBox(height: 24),
                   
-                  // Sign up button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: activeColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                  // Create Account button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (agreeToTerms) {
+                            try {
+                              await _auth.createUserWithEmailAndPassword(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              );
+                              Get.to(() => const VerifyEmailScreen());
+                            } catch (e) {
+                              Get.snackbar('Error', e.toString());
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: agreeToTerms ? activeColor : const Color(0xFFE0E0E0),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      onPressed: () {
-                        if (agreeToTerms) {
-                          Get.to(() => const VerifyEmailScreen());
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please agree to the terms of use'),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: Colors.white),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ),

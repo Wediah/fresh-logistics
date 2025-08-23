@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:freshlogistics/common/widgets/appbar/appbar.dart';
 import 'package:freshlogistics/common/widgets/success_screen/custom_shapes/containers/primary_header_container.dart';
 import 'package:freshlogistics/common/widgets/texts/section_heading.dart';
+import 'package:freshlogistics/features/authentication/screens/login/login.dart';
 import 'package:freshlogistics/features/personalization/screens/profile/profile.dart';
 import 'package:freshlogistics/features/personalization/screens/settings/widgets/settings_menu_tile.dart';
 import 'package:freshlogistics/features/personalization/screens/settings/widgets/user_profile_tile.dart';
+import 'package:freshlogistics/features/shop/screens/admin/admin_panel.dart';
 import 'package:freshlogistics/utils/constants/colors.dart';
 import 'package:freshlogistics/utils/constants/sizes.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -90,8 +93,14 @@ class SettingsScreen extends StatelessWidget {
                   SettingsMenuTile(
                     icon: Icons.file_upload,
                     title: 'Load Data',
-                    subTitle: 'Upload Data to your Cloud Firebase',
+                    subTitle: 'Upload Data to your Cloud Storage',
                     onTap: () {},
+                  ),
+                  SettingsMenuTile(
+                    icon: Icons.admin_panel_settings,
+                    title: 'Admin Panel',
+                    subTitle: 'Manage products and categories in Firebase',
+                    onTap: () => Get.to(() => const AdminPanel()),
                   ),
                   SettingsMenuTile(
                     icon: Icons.location_on,
@@ -116,12 +125,18 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(height: Sizes.spaceBtwSections),
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(onPressed: () {}, child: const Text('Logout')),
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        Get.offAll(() => const LoginScreen());
+                      },
+                      child: const Text('Logout'),
+                    ),
                   ),
                   const SizedBox(height: Sizes.spaceBtwSections * 2.5),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

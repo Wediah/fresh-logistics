@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:freshlogistics/features/authentication/screens/password_configs/forgot_password.dart';
 import 'package:freshlogistics/features/authentication/screens/registration/register.dart';
@@ -17,6 +18,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool agreeToTerms = false;
   bool obscurePassword = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: Stack(
                 children: [
-                  // Back button
-                  // Positioned(
-                  //   left: 16,
-                  //   top: 60,
-                  //   child: GestureDetector(
-                  //     onTap: () => Navigator.pop(context),
-                  //     child: Row(
-                  //       children: [
-                  //         const Icon(Icons.arrow_back, color: Colors.white),
-                  //         const SizedBox(width: 4),
-                  //         Text(
-                  //           'Back',
-                  //           style: TextStyle(
-                  //             color: Colors.white,
-                  //             fontSize: 14,
-                  //             fontFamily: 'Inter',
-                  //             fontWeight: FontWeight.w600,
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  
                   // Title and subtitle
                   Center(
                     child: Column(
@@ -97,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            
+
             // Form fields
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
@@ -125,8 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 1,
                       ),
                     ),
-                    child: const TextField(
-                      decoration: InputDecoration(
+                    child: TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
                         hintText: 'Enter your email',
@@ -134,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Password field
                   Text(
                     'Password',
@@ -157,9 +146,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     child: TextField(
+                      controller: _passwordController,
                       obscureText: obscurePassword,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         border: InputBorder.none,
                         hintText: 'Enter your password',
                         suffixIcon: IconButton(
@@ -176,83 +166,67 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: Sizes.spaceBtwItems),
+                  const SizedBox(height: Sizes.spaceBtwItems),
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () => Get.to(() => const ForgotPasswordScreen()),
-                      child: const Text('forgot password?'),
+                      child: const Text('Forgot password?'),
                     ),
                   ),
-                  // SizedBox(height: Sizes.spaceBtwSections),
-                  
-                  // Terms checkbox
-                  // Row(
-                  //   children: [
-                  //     Checkbox(
-                  //       value: agreeToTerms,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           agreeToTerms = value ?? false;
-                  //         });
-                  //       },
-                  //       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  //     ),
-                  //     Expanded(
-                  //       child: Text.rich(
-                  //         TextSpan(
-                  //           children: [
-                  //             const TextSpan(
-                  //               text: 'I agree with ',
-                  //               style: TextStyle(
-                  //                 color: Colors.black,
-                  //                 fontSize: 14,
-                  //                 fontFamily: 'Inter',
-                  //                 fontWeight: FontWeight.w300,
-                  //               ),
-                  //             ),
-                  //             TextSpan(
-                  //               text: 'terms of use',
-                  //               style: TextStyle(
-                  //                 color: Colors.black,
-                  //                 fontSize: 14,
-                  //                 fontFamily: 'Inter',
-                  //                 fontWeight: FontWeight.w700,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  SizedBox(height: 24),
 
+                  // Login Button
+                  const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => Get.to(() => const NavigationMenu()),
+                      onPressed: () async {
+                        final email = _emailController.text.trim();
+                        final password = _passwordController.text;
+
+                        if (email.isEmpty || password.isEmpty) {
+                          Get.snackbar('Error', 'Please enter both email and password');
+                          return;
+                        }
+
+                        try {
+                          await _auth.signInWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                          );
+                          Get.offAll(() => const NavigationMenu());
+                        } catch (e) {
+                          Get.snackbar('Login Failed', e.toString().contains('wrong-password')
+                              ? 'Incorrect password'
+                              : e.toString().contains('user-not-found')
+                                  ? 'No user found with this email'
+                                  : e.toString().contains('network-request-failed')
+                                      ? 'Check your internet connection'
+                                      : 'Login failed: $e');
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF19530E), // Background color
-                        foregroundColor: Colors.white, // Text color
+                        backgroundColor: const Color(0xFF19530E),
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Border radius
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 16), // Button padding
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text(
                         'Log in',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                        )),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            
-            // Divider with "or" - moved outside the form padding
+
+            // Divider with "or"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -290,75 +264,85 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            
-            // Social login buttons - moved outside the form padding
+
+            // Social login buttons
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 49,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xFFB3BCB2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.android, size: 24),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Google Play',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.snackbar("Info", "Google login not implemented yet.");
+                      },
+                      child: Container(
+                        height: 49,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFB3BCB2),
+                            width: 1,
                           ),
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.android, size: 24),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Google Play',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: Container(
-                      height: 49,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xFFB3BCB2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.apple, size: 24),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Apple Store',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.snackbar("Info", "Apple login not implemented yet.");
+                      },
+                      child: Container(
+                        height: 49,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFB3BCB2),
+                            width: 1,
                           ),
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.apple, size: 24),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Apple Store',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             // Login prompt at bottom
             Padding(
               padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
@@ -376,7 +360,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: const Text(
-                      'Sign up',  // Fixed typo from "Log up" to "Login"
+                      'Sign up',
                       style: TextStyle(
                         color: Color(0xFF249A0F),
                         fontWeight: FontWeight.bold,

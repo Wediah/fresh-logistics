@@ -1,19 +1,16 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:freshlogistics/common/widgets/products/cart/product_card_vertical.dart';
+import 'package:freshlogistics/features/shop/controllers/product_controller.dart';
 import 'package:freshlogistics/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:freshlogistics/features/shop/screens/home/widgets/home_categories.dart';
 import 'package:freshlogistics/features/shop/screens/home/widgets/promo_slider.dart';
-import '../../../../common/widgets/image_text_widget/vertical_image_text.dart';
-import '../../../../common/widgets/images/rounded_image.dart';
+import 'package:get/get.dart';
 import '../../../../common/widgets/layouts/grid_layout.dart';
-import '../../../../common/widgets/success_screen/custom_shapes/containers/circular_container.dart';
 import '../../../../common/widgets/success_screen/custom_shapes/containers/primary_header_container.dart';
 import '../../../../common/widgets/success_screen/custom_shapes/containers/search_container.dart';
 import '../../../../common/widgets/texts/section_heading.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
-import '../../controllers/home_controller.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -21,25 +18,27 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productController = Get.find<ProductController>();
+    
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            PrimaryHeaderContainer(
+            const PrimaryHeaderContainer(
               child: Column(
                 children: [
-                  const FHomeAppBar(),
-                  const SizedBox(height: Sizes.spaceBtwSections),
+                  FHomeAppBar(),
+                  SizedBox(height: Sizes.spaceBtwSections),
 
-                  const SearchContainer(text: 'Search for products'),
-                  const SizedBox(height: Sizes.spaceBtwSections),
+                  SearchContainer(text: 'Search for products'),
+                  SizedBox(height: Sizes.spaceBtwSections),
                   
                   Padding(
                     padding: EdgeInsets.only(left: Sizes.defaultSpace),
                     child: Column(
                       children: [
                         SectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white),
-                        const SizedBox(height: Sizes.spaceBtwItems),
+                        SizedBox(height: Sizes.spaceBtwItems),
                         HomeCategory()
                       ]
                     ),
@@ -53,13 +52,33 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(Sizes.defaultSpace),
               child: Column(
                 children: [
+                
+                  
                   const PromoSlider(banners: [ImageStrings.banner1, ImageStrings.banner2, ImageStrings.banner3]),
                   const SizedBox(height: Sizes.spaceBtwSections),
 
                   const SectionHeading(title: 'Popular Products'),
                   const SizedBox(height: Sizes.spaceBtwItems),
 
-                  GridLayout(itemCount: 4, itemBuilder: (_, index) => const ProductCardVertical())
+                  // Use Firebase products instead of dummy data
+                  Obx(() {
+                    if (productController.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    
+                    if (productController.featuredProducts.isEmpty) {
+                      return const Center(
+                        child: Text('No products available'),
+                      );
+                    }
+                    
+                    return GridLayout(
+                      itemCount: productController.featuredProducts.length,
+                      itemBuilder: (_, index) => ProductCardVertical(
+                        product: productController.featuredProducts[index]
+                      ),
+                    );
+                  }),
                 ]
               )
             )

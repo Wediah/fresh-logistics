@@ -5,17 +5,34 @@ import 'package:freshlogistics/common/widgets/images/rounded_image.dart';
 import 'package:freshlogistics/common/widgets/texts/product_price_text.dart';
 import 'package:freshlogistics/common/widgets/texts/product_title_text.dart';
 import 'package:freshlogistics/common/widgets/texts/section_heading.dart';
+import 'package:freshlogistics/features/shop/controllers/cart_controller.dart';
+import 'package:freshlogistics/features/shop/controllers/favorites_controller.dart';
 import 'package:freshlogistics/utils/constants/colors.dart';
-import 'package:freshlogistics/utils/constants/image_strings.dart';
 import 'package:freshlogistics/utils/constants/sizes.dart';
+import 'package:freshlogistics/features/shop/models/product_model.dart';
+import 'package:get/get.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+  const ProductDetailScreen({super.key, required this.product});
+
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
+    final cartController = CartController.instance;
+    final favoritesController = FavoritesController.instance;
+    
     return Scaffold(
-      appBar: const FAppBar(showBackArrow: true),
+      appBar: FAppBar(
+        showBackArrow: true,
+        actions: [
+          Obx(() => CircularIcon(
+            icon: favoritesController.isFavorite(product.id) ? Icons.favorite : Icons.favorite_border,
+            color: favoritesController.isFavorite(product.id) ? Colors.red : null,
+            onPressed: () => favoritesController.toggleFavoriteProduct(product),
+          )),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -24,9 +41,9 @@ class ProductDetailScreen extends StatelessWidget {
               width: double.infinity,
               height: 400,
               padding: const EdgeInsets.all(Sizes.defaultSpace),
-              child: const Center(
+              child: Center(
                 child: RoundedImage(
-                  imageUrl: ImageStrings.product1,
+                  imageUrl: product.imageUrl,
                   applyImageRadius: true,
                 ),
               ),
@@ -53,8 +70,8 @@ class ProductDetailScreen extends StatelessWidget {
                           Text.rich(
                             TextSpan(
                               children: [
-                                TextSpan(text: '5.0', style: Theme.of(context).textTheme.bodyLarge),
-                                const TextSpan(text: '(199)'),
+                                TextSpan(text: product.rating.toString(), style: Theme.of(context).textTheme.bodyLarge),
+                                TextSpan(text: '(${product.reviewCount})'),
                               ],
                             ),
                           ),
@@ -77,14 +94,14 @@ class ProductDetailScreen extends StatelessWidget {
                         child: Text('25%', style: Theme.of(context).textTheme.labelLarge!.apply(color: AppColors.white)),
                       ),
                       const SizedBox(width: Sizes.spaceBtwItems),
-                      Text('\$250', style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough)),
+                      Text('\$${(product.price * 1.25).toStringAsFixed(2)}', style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough)),
                       const SizedBox(width: Sizes.spaceBtwItems),
-                      const ProductPriceText(price: '175', isLarge: true),
+                      ProductPriceText(price: product.price.toString(), isLarge: true),
                     ],
                   ),
                   
                   const SizedBox(height: Sizes.spaceBtwItems / 1.5),
-                  const ProductTitleText(title: 'Green Spinach'),
+                  ProductTitleText(title: product.name),
                   const SizedBox(height: Sizes.spaceBtwItems / 1.5),
                   
                   // Stock Status
@@ -92,7 +109,7 @@ class ProductDetailScreen extends StatelessWidget {
                     children: [
                       const ProductTitleText(title: 'Status'),
                       const SizedBox(width: Sizes.spaceBtwItems),
-                      Text('In Stock', style: Theme.of(context).textTheme.titleMedium),
+                      Text(product.isInStock ? 'In Stock' : 'Out of Stock', style: Theme.of(context).textTheme.titleMedium),
                     ],
                   ),
                   
@@ -108,7 +125,7 @@ class ProductDetailScreen extends StatelessWidget {
                         size: 16,
                       ),
                       const SizedBox(width: Sizes.spaceBtwItems / 2),
-                      Flexible(child: Text('Green', style: Theme.of(context).textTheme.titleMedium, overflow: TextOverflow.ellipsis)),
+                      Flexible(child: Text(product.brand, style: Theme.of(context).textTheme.titleMedium, overflow: TextOverflow.ellipsis)),
                     ],
                   ),
                   
@@ -116,15 +133,18 @@ class ProductDetailScreen extends StatelessWidget {
                   const SizedBox(height: Sizes.spaceBtwSections),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(onPressed: () {}, child: const Text('Add to Cart')),
+                    child: ElevatedButton(
+                      onPressed: () => cartController.addToCart(product),
+                      child: const Text('Add to Cart'),
+                    ),
                   ),
                   const SizedBox(height: Sizes.spaceBtwSections),
                   
                   // Description
                   const SectionHeading(title: 'Description', showActionButton: false),
                   const SizedBox(height: Sizes.spaceBtwItems),
-                  const Text(
-                    'This is a product description for Green Spinach. There are more things that can be added but I am just demonstrating and nothing else. Fresh and organic spinach grown locally.',
+                  Text(
+                    product.description,
                   ),
                   
                   // Reviews
@@ -134,7 +154,7 @@ class ProductDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SectionHeading(title: 'Reviews(199)', showActionButton: false),
+                      SectionHeading(title: 'Reviews(${product.reviewCount})', showActionButton: false),
                       IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios, size: 18)),
                     ],
                   ),
@@ -179,7 +199,7 @@ class ProductDetailScreen extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => cartController.addToCart(product),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(Sizes.spaceBtwItems),
                 backgroundColor: AppColors.primaryGreen,

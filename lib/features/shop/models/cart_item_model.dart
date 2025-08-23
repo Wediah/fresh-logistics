@@ -24,7 +24,7 @@ class CartItem {
   // Calculate total price for this item
   double get totalPrice => price * quantity;
 
-  // Convert to JSON for Firebase
+  // Convert to JSON for local storage
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -39,7 +39,7 @@ class CartItem {
     };
   }
 
-  // Create from JSON from Firebase
+  // Create from JSON from local storage
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       id: json['id'] ?? '',

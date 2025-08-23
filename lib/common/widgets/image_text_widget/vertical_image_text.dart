@@ -39,7 +39,28 @@ class VerticalImageText extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Sizes.borderRadiusCircle),
                   ),
                   child: ClipOval(
-                    child: Image(image: AssetImage(image), fit: BoxFit.cover),
+                    child: Image(
+                      image: (image.startsWith('http://') || image.startsWith('https://')) 
+                          ? NetworkImage(image) 
+                          : AssetImage(image) as ImageProvider,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.category,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: Sizes.spaceBtwItems / 2),

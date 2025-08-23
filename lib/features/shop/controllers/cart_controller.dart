@@ -1,8 +1,8 @@
-import 'package:freshlogistics/data/repositories/cart_repository.dart';
 import 'package:freshlogistics/features/shop/models/cart_item_model.dart';
 import 'package:freshlogistics/features/shop/models/product_model.dart';
 import 'package:freshlogistics/utils/popups/loaders.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class CartController extends GetxController {
   static CartController get instance => Get.find();
@@ -12,26 +12,27 @@ class CartController extends GetxController {
   RxDouble totalCartPrice = 0.0.obs;
   RxInt productQuantityInCart = 0.obs;
   RxList<CartItem> cartItems = <CartItem>[].obs;
-  final cartRepository = Get.put(CartRepository());
+  final storage = GetStorage();
 
   @override
   void onInit() {
+    loadCartItems();
     super.onInit();
-    // Listen to cart changes
-    updateCartValues();
   }
 
-  void updateCartValues() {
-    // Listen to cart items stream
-    cartRepository.getCartItems().listen((items) {
-      cartItems.assignAll(items);
-      noOfCartItems.value = items.fold(0, (sum, item) => sum + item.quantity);
-    });
+  // Load cart items from local storage
+  void loadCartItems() {
+    final cartData = storage.read<List>('cartItems');
+    if (cartData != null) {
+      cartItems.assignAll(cartData.map((item) => CartItem.fromJson(item)).toList());
+      updateCartTotals();
+    }
+  }
 
-    // Listen to cart total stream
-    cartRepository.getCartTotal().listen((total) {
-      totalCartPrice.value = total;
-    });
+  // Save cart items to local storage
+  void saveCartItems() {
+    final cartData = cartItems.map((item) => item.toJson()).toList();
+    storage.write('cartItems', cartData);
   }
 
   // Add item to cart
@@ -52,7 +53,19 @@ class CartController extends GetxController {
         size: selectedSize ?? (product.availableSizes.isNotEmpty ? product.availableSizes.first : 'Default'),
       );
 
-      cartRepository.addToCart(cartItem);
+      final index = cartItems.indexWhere((cartItem) => cartItem.productId == product.id);
+      
+      if (index >= 0) {
+        // Item exists, update quantity
+        cartItems[index].quantity += quantity;
+      } else {
+        // New item, add to cart
+        cartItems.add(cartItem);
+      }
+      
+      updateCartTotals();
+      saveCartItems();
+      
       TLoaders.successSnackBar(title: 'Added to Cart', message: '${product.name} has been added to your cart');
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
@@ -60,9 +73,12 @@ class CartController extends GetxController {
   }
 
   // Remove item from cart
-  void removeFromCart(String cartItemId) {
+  void removeFromCart(String productId) {
     try {
-      cartRepository.removeFromCart(cartItemId);
+      cartItems.removeWhere((item) => item.productId == productId);
+      updateCartTotals();
+      saveCartItems();
+      
       TLoaders.successSnackBar(title: 'Removed', message: 'Item has been removed from your cart');
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
@@ -72,7 +88,12 @@ class CartController extends GetxController {
   // Add one item to cart
   void addOneToCart(CartItem item) {
     try {
-      cartRepository.updateCartItemQuantity(item.id, item.quantity + 1);
+      final index = cartItems.indexWhere((cartItem) => cartItem.productId == item.productId);
+      if (index >= 0) {
+        cartItems[index].quantity += 1;
+        updateCartTotals();
+        saveCartItems();
+      }
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
     }
@@ -81,23 +102,28 @@ class CartController extends GetxController {
   // Remove one item from cart
   void removeOneFromCart(CartItem item) {
     try {
-      if (item.quantity > 1) {
-        cartRepository.updateCartItemQuantity(item.id, item.quantity - 1);
-      } else {
-        // Show confirmation dialog before removing completely
-        removeFromCartDialog(item.id);
+      final index = cartItems.indexWhere((cartItem) => cartItem.productId == item.productId);
+      if (index >= 0) {
+        if (item.quantity > 1) {
+          cartItems[index].quantity -= 1;
+        } else {
+          // Show confirmation dialog before removing completely
+          removeFromCartDialog(item.productId);
+        }
+        updateCartTotals();
+        saveCartItems();
       }
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
     }
   }
 
-  void removeFromCartDialog(String cartItemId) {
+  void removeFromCartDialog(String productId) {
     Get.defaultDialog(
       title: 'Remove Product',
       middleText: 'Are you sure you want to remove this product from the cart?',
       onConfirm: () {
-        removeFromCart(cartItemId);
+        removeFromCart(productId);
         Get.back();
       },
       onCancel: () {},
@@ -111,7 +137,9 @@ class CartController extends GetxController {
       middleText: 'Are you sure you want to remove all items from the cart?',
       onConfirm: () async {
         try {
-          await cartRepository.clearCart();
+          cartItems.clear();
+          updateCartTotals();
+          saveCartItems();
           TLoaders.successSnackBar(title: 'Cart Cleared', message: 'All items have been removed from your cart');
           Get.back();
         } catch (e) {
@@ -146,5 +174,25 @@ class CartController extends GetxController {
     } catch (e) {
       return null;
     }
+  }
+
+  // Update cart totals
+  void updateCartTotals() {
+    double calculatedTotalPrice = 0.0;
+    int calculatedNoOfItems = 0;
+
+    for (var item in cartItems) {
+      calculatedTotalPrice += (item.price) * item.quantity;
+      calculatedNoOfItems += item.quantity;
+    }
+
+    totalCartPrice.value = calculatedTotalPrice;
+    noOfCartItems.value = calculatedNoOfItems;
+  }
+
+  // Get quantity of specific product in cart
+  int getProductQuantityInCart(String productId) {
+    final foundItem = cartItems.firstWhereOrNull((item) => item.productId == productId);
+    return foundItem?.quantity ?? 0;
   }
 }
